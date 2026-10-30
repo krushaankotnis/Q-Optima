@@ -1,7 +1,4 @@
 # Q-Optima
-<<<<<<< HEAD
-Full-stack quantum resource recommendation dashboard using live IBM Quantum metadata and simulated QPUs. Built with React, Express, Python/Qiskit, PostgreSQL, and Docker Compose; designed for AWS EC2 and RDS deployment.
-=======
 
 Q-Optima is a cloud-based quantum computing resource recommendation system. It monitors QPU metadata and queue signals, then recommends a suitable operational device for a workload without submitting jobs or executing circuits.
 
@@ -84,4 +81,3 @@ Mock QPUs are always available so the dashboard remains demonstrable without IBM
 ## Security and future AWS plan
 
 Do not hard-code secrets, commit `.env`, or place IBM credentials in React. The current design is intentionally small for local Docker use and can later run on an EC2 host. S3, IAM, and CloudWatch may be introduced where useful. Kubernetes, ECS/Fargate, queues, caches, load balancers, and WAF are deliberately out of scope until a real requirement exists.
->>>>>>> 3f1fd6b (Initial commit)
