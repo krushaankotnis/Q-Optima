@@ -38,6 +38,16 @@ docker compose up --build
 
 Open `http://localhost:3000`. The backend is available at `http://localhost:5000`. Stop with `docker compose down`; PostgreSQL data remains in the `postgres-data` volume.
 
+## Deploy with EC2 and RDS
+
+Use `docker-compose.aws.yml` on an EC2 host when PostgreSQL is provided by Amazon RDS. Configure `POSTGRES_HOST` with the RDS endpoint and set `POSTGRES_USER`, `POSTGRES_PASSWORD`, and `POSTGRES_DB` in the host's untracked `.env` file. The AWS Compose configuration enables PostgreSQL TLS verification, serves the frontend on port 80, and does not publish the backend port. Allow inbound PostgreSQL traffic to RDS only from the EC2 security group, and apply `database/init.sql` to the RDS database before starting the application:
+
+```bash
+docker compose -f docker-compose.aws.yml up -d --build
+```
+
+Keep `.env` out of source control and restrict HTTP access or add HTTPS before using the deployment with real users.
+
 ## Run without Docker
 
 Start PostgreSQL and apply `database/init.sql`. Then run the Python service:

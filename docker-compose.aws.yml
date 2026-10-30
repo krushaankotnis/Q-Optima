@@ -1,0 +1,43 @@
+services:
+  quantum-service:
+    build: ./quantum-service
+    restart: unless-stopped
+    environment:
+      IBM_API_KEY: ${IBM_API_KEY:-}
+      IBM_INSTANCE_CRN: ${IBM_INSTANCE_CRN:-}
+      QUANTUM_SERVICE_PORT: ${QUANTUM_SERVICE_PORT:-8000}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 2s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      BACKEND_PORT: ${BACKEND_PORT:-5000}
+      QUANTUM_SERVICE_URL: http://quantum-service:8000
+      POSTGRES_HOST: ${POSTGRES_HOST:?Set POSTGRES_HOST to the RDS endpoint}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB}
+      POSTGRES_SSL: "true"
+    depends_on:
+      quantum-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5000/api/health"]
+      interval: 2s
+      timeout: 3s
+      retries: 5
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "80:80"

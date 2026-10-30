@@ -7,6 +7,7 @@ export const pool = new Pool({
   user: process.env.POSTGRES_USER || 'postgres',
   password: process.env.POSTGRES_PASSWORD || 'postgres',
   database: process.env.POSTGRES_DB || 'qoptima',
+  ssl: process.env.POSTGRES_SSL === 'true' ? { rejectUnauthorized: true } : undefined,
   connectionTimeoutMillis: 2000,
 });
 
