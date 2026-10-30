@@ -1,0 +1,9 @@
+{
+  "name": "q-optima",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "docker compose up -d --build",
+    "stop": "docker compose down --remove-orphans"
+  }
+}
