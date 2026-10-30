@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import pg from 'pg';
 
 const { Pool } = pg;
@@ -7,7 +8,12 @@ export const pool = new Pool({
   user: process.env.POSTGRES_USER || 'postgres',
   password: process.env.POSTGRES_PASSWORD || 'postgres',
   database: process.env.POSTGRES_DB || 'qoptima',
-  ssl: process.env.POSTGRES_SSL === 'true' ? { rejectUnauthorized: true } : undefined,
+  ssl: process.env.POSTGRES_SSL === 'true'
+    ? {
+        ca: readFileSync('/etc/ssl/certs/rds-global-bundle.pem', 'utf8'),
+        rejectUnauthorized: true,
+      }
+    : undefined,
   connectionTimeoutMillis: 2000,
 });
 
